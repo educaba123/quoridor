@@ -14,7 +14,7 @@ class State(IntEnum):
 steps = []
 
     # algoritmo de backtraking
-def init_game(board, pawns, fences, previus_pawn = None):
+def backtracking(board, pawns, fences, previus_pawn = None):
     player_turn = 0
     current_pawn = pawns[player_turn]
 
@@ -31,7 +31,7 @@ def init_game(board, pawns, fences, previus_pawn = None):
 
         steps.append(pawn_right)
         display(pawns, fences)
-        if init_game(board, pawns, fences, current_pawn) :
+        if backtracking(board, pawns, fences, current_pawn) :
             return True
  
     if pawn_up != current_pawn and pawn_up != previus_pawn and no_repeat_steps(steps, pawn_up):
@@ -39,7 +39,7 @@ def init_game(board, pawns, fences, previus_pawn = None):
         steps.append(pawn_up)
 
         display(pawns, fences)
-        if init_game(board, pawns, fences, current_pawn):
+        if backtracking(board, pawns, fences, current_pawn):
             return True
 
     if pawn_down != current_pawn and pawn_down != previus_pawn and no_repeat_steps(steps, pawn_down):
@@ -47,7 +47,7 @@ def init_game(board, pawns, fences, previus_pawn = None):
         steps.append(pawn_down)
 
         display(pawns, fences)
-        if init_game(board, pawns, fences, current_pawn):
+        if backtracking(board, pawns, fences, current_pawn):
             return True
 
     if pawn_left != current_pawn and pawn_left != previus_pawn and no_repeat_steps(steps, pawn_left):
@@ -55,10 +55,82 @@ def init_game(board, pawns, fences, previus_pawn = None):
         steps.append(pawn_left)
 
         display(pawns, fences)
-        if init_game(board, pawns, fences, current_pawn):
+        if backtracking(board, pawns, fences, current_pawn):
             return True
 
     return False
+
+def backtracking_2(board, pawns, fences, previus_pawn = None):
+    player_turn = 0
+    current_pawn = pawns[player_turn]
+
+    if is_a_victory(current_pawn):
+        return True
+
+    pawn_right = move_right(current_pawn, fences)
+    pawn_down = move_down(current_pawn, fences)
+    pawn_up = move_up(current_pawn, fences)
+    pawn_left = move_left(current_pawn, fences)
+
+    if pawn_right != current_pawn and pawn_right != previus_pawn and no_repeat_steps(steps, pawn_right):
+        pawns[player_turn] = pawn_right
+
+        steps.append(pawn_right)
+        display(pawns, fences)
+        if backtracking(board, pawns, fences, current_pawn) :
+            return True
+ 
+    if pawn_up != current_pawn and pawn_up != previus_pawn and no_repeat_steps(steps, pawn_up):
+        pawns[player_turn] = pawn_up
+        steps.append(pawn_up)
+
+        display(pawns, fences)
+        if backtracking(board, pawns, fences, current_pawn):
+            return True
+
+    if pawn_down != current_pawn and pawn_down != previus_pawn and no_repeat_steps(steps, pawn_down):
+        pawns[player_turn] = pawn_down
+        steps.append(pawn_down)
+
+        display(pawns, fences)
+        if backtracking(board, pawns, fences, current_pawn):
+            return True
+
+    if pawn_left != current_pawn and pawn_left != previus_pawn and no_repeat_steps(steps, pawn_left):
+        pawns[player_turn] = pawn_left
+        steps.append(pawn_left)
+
+        display(pawns, fences)
+        if backtracking(board, pawns, fences, current_pawn):
+            return True
+
+    return False
+
+
+def BFS(board, pawns, fences):
+    player_turn = 0
+    current_pawn = pawns[player_turn]
+
+    n=len(board)
+    padres=[[None for i in range(n)] for i in range(n)]
+    visitado=[[False for i in range(n)] for i in range(n)]
+    # print(visitado)
+    cola=[current_pawn]
+    visitado[current_pawn.x][current_pawn.y]=True
+    print(current_pawn.x, " ", current_pawn.y)
+    
+    while len(cola)>0:
+        u=cola[0]
+        cola=cola[1:]
+        for v in board[u.x]:
+            if not visitado[v]:
+                # print(v) #secuencia de visita
+                cola.append(v)
+                padres[v]=u
+                visitado[v]=True
+    return None
+
+
 
 def no_repeat_steps(steps, pawn):
     for step in steps:
